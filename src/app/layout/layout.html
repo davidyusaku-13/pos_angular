@@ -1,11 +1,116 @@
-<div class="min-h-screen bg-gray-50">
-  <p-menubar [model]="menuItems">
-    <ng-template pTemplate="end">
-      <p-button label="Logout" icon="pi pi-sign-out" severity="danger" (onClick)="logout()" />
-    </ng-template>
-  </p-menubar>
+<div class="min-h-screen"
+     [style.background]="isDarkMode ? 'linear-gradient(to bottom right, #1e293b, #0f172a)' : 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)'">
+  <!-- Desktop Navigation -->
+  <div class="hidden md:block">
+    <p-menubar [model]="menuItems" class="shadow-lg border-0 rounded-none"
+               [style]="isDarkMode ? 'background: var(--card-bg); color: var(--text-primary)' : 'background: #ffffff; color: #1f2937'">
+      <ng-template pTemplate="start">
+        <div class="flex items-center px-4">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+               [style.background]="isDarkMode ? 'linear-gradient(to right, #3b82f6, #1d4ed8)' : 'linear-gradient(to right, #2563eb, #3730a3)'">
+        <i class="pi pi-home text-white"></i>
+          </div>
+          <span class="text-xl font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#1f2937'">POS System</span>
+        </div>
+      </ng-template>
+       <ng-template pTemplate="end">
+         <div class="flex items-center space-x-3">
+           <!-- Theme Toggle Button -->
+           <p-button
+             [icon]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"
+             severity="secondary"
+             (onClick)="toggleTheme()"
+             class="p-2"
+             pTooltip="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}"
+             tooltipPosition="bottom"
+           />
 
-  <main class="container mx-auto px-4 py-6">
+           <!-- Auth Section -->
+           <div *ngIf="isAuthenticated" class="flex items-center space-x-3">
+             <span class="text-sm text-gray-600">Welcome back, {{ getUserDisplayName() }}!</span>
+             <p-button
+               label="Logout"
+               severity="danger"
+               (onClick)="logout()"
+               class="bg-red-600 hover:bg-red-700 border-red-600"
+             >
+               <i class="pi pi-sign-out mr-2"></i>
+             </p-button>
+           </div>
+         </div>
+       </ng-template>
+    </p-menubar>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div class="md:hidden">
+    <div class="shadow-lg px-4 py-3 flex items-center justify-between"
+         [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'">
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+             [style.background]="isDarkMode ? 'linear-gradient(to right, #3b82f6, #1d4ed8)' : 'linear-gradient(to right, #2563eb, #3730a3)'">
+          <i class="pi pi-home text-white"></i>
+        </div>
+        <span class="text-lg font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#1f2937'">POS</span>
+      </div>
+       <div class="flex items-center space-x-2">
+         <p-button
+           [icon]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"
+           severity="secondary"
+           (onClick)="toggleTheme()"
+           class="p-2"
+         />
+         <p-button
+           icon="pi pi-bars"
+           severity="secondary"
+           (onClick)="toggleMobileMenu()"
+           class="p-2"
+         />
+       </div>
+     </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div *ngIf="showMobileMenu" class="fixed inset-0 z-50 md:hidden">
+      <div class="absolute inset-0 bg-black bg-opacity-50" (click)="toggleMobileMenu()"></div>
+      <div class="absolute right-0 top-0 h-full w-64 shadow-xl"
+           [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'">
+        <div class="p-4 border-b" [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'">
+          <div class="flex items-center justify-between">
+            <span class="text-lg font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#1f2937'">Menu</span>
+            <p-button
+              icon="pi pi-times"
+              severity="secondary"
+              (onClick)="toggleMobileMenu()"
+              class="p-1"
+            />
+          </div>
+        </div>
+        <div class="py-4">
+          <a *ngFor="let item of menuItems"
+             [routerLink]="item.routerLink"
+             class="flex items-center px-6 py-3 transition-colors"
+             [style.color]="isDarkMode ? 'var(--text-secondary)' : '#374151'"
+             [style]="isDarkMode ? 'hover:background-color: var(--bg-tertiary); hover:color: var(--text-primary)' : 'hover:bg-blue-50 hover:text-blue-600'"
+             (click)="toggleMobileMenu()">
+            <i [class]="item.icon + ' mr-3'"></i>
+            <span>{{ item.label }}</span>
+          </a>
+           <div *ngIf="isAuthenticated" class="border-t mt-4 pt-4 px-6"
+                [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'">
+             <p-button
+               label="Logout"
+               severity="danger"
+               (onClick)="logout()"
+               class="w-full"
+             />
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="container mx-auto px-4 py-6 max-w-7xl"
+         [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">
     <router-outlet></router-outlet>
   </main>
 </div>

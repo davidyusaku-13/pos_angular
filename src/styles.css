@@ -1,6 +1,84 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@import "primeicons/primeicons.css";
 @plugin "tailwindcss-primeui";
+
+/* Custom Theme Colors - Soft Orange and Blue Palette */
+@theme {
+  --color-primary-orange: #f97316; /* Soft orange */
+  --color-primary-orange-light: #fed7aa;
+  --color-primary-orange-dark: #ea580c;
+  --color-primary-blue: #3b82f6; /* Soft blue */
+  --color-primary-blue-light: #dbeafe;
+  --color-primary-blue-dark: #2563eb;
+
+  /* Light theme colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-card: #ffffff;
+  --color-card-hover: #f8fafc;
+
+  /* Dark theme colors */
+  --color-bg-primary-dark: #0f172a;
+  --color-bg-secondary-dark: #1e293b;
+  --color-bg-tertiary-dark: #334155;
+  --color-text-primary-dark: #f8fafc;
+  --color-text-secondary-dark: #cbd5e1;
+  --color-text-muted-dark: #64748b;
+  --color-border-dark: #334155;
+  --color-card-dark: #1e293b;
+  --color-card-hover-dark: #334155;
+}
+
+/* Light Theme (Default) */
+:root {
+  --bg-primary: var(--color-bg-primary);
+  --bg-secondary: var(--color-bg-secondary);
+  --bg-tertiary: var(--color-bg-tertiary);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --border-color: var(--color-border);
+  --card-bg: var(--color-card);
+  --card-hover: var(--color-card-hover);
+  --primary-orange: var(--color-primary-orange);
+  --primary-orange-light: var(--color-primary-orange-light);
+  --primary-orange-dark: var(--color-primary-orange-dark);
+  --primary-blue: var(--color-primary-blue);
+  --primary-blue-light: var(--color-primary-blue-light);
+  --primary-blue-dark: var(--color-primary-blue-dark);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: var(--color-bg-primary-dark);
+  --bg-secondary: var(--color-bg-secondary-dark);
+  --bg-tertiary: var(--color-bg-tertiary-dark);
+  --text-primary: var(--color-text-primary-dark);
+  --text-secondary: var(--color-text-secondary-dark);
+  --text-muted: var(--color-text-muted-dark);
+  --border-color: var(--color-border-dark);
+  --card-bg: var(--color-card-dark);
+  --card-hover: var(--color-card-hover-dark);
+  --primary-orange: var(--color-primary-orange);
+  --primary-orange-light: var(--color-primary-orange-light);
+  --primary-orange-dark: var(--color-primary-orange-dark);
+  --primary-blue: var(--color-primary-blue);
+  --primary-blue-light: var(--color-primary-blue-light);
+  --primary-blue-dark: var(--color-primary-blue-dark);
+}
+
+/* Theme-aware body styles */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 /* Mobile-specific styles */
 @media (max-width: 768px) {

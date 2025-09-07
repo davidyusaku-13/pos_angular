@@ -1,49 +1,228 @@
-<h1>POS Dashboard</h1>
-
-<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <p-card>
-    <ng-template pTemplate="header">
-      <i class="pi pi-shopping-cart text-2xl"></i>
-    </ng-template>
-    <h3 class="text-lg font-semibold">Sales</h3>
-    <p class="text-gray-600">Manage sales transactions</p>
-    <ng-template pTemplate="footer">
-      <p-button label="Go to Sales" routerLink="/sales" />
-    </ng-template>
-  </p-card>
-
-  <p-card>
-    <ng-template pTemplate="header">
-      <i class="pi pi-box text-2xl"></i>
-    </ng-template>
-    <h3 class="text-lg font-semibold">Products</h3>
-    <p class="text-gray-600">Manage product catalog</p>
-    <ng-template pTemplate="footer">
-      <p-button label="Go to Products" routerLink="/products" />
-    </ng-template>
-  </p-card>
-
-  <p-card>
-    <ng-template pTemplate="header">
-      <i class="pi pi-chart-line text-2xl"></i>
-    </ng-template>
-    <h3 class="text-lg font-semibold">Reports</h3>
-    <p class="text-gray-600">View sales reports</p>
-    <ng-template pTemplate="footer">
-      <p-button label="Go to Reports" routerLink="/reports" />
-    </ng-template>
-  </p-card>
-
-  <p-card>
-    <ng-template pTemplate="header">
-      <i class="pi pi-users text-2xl"></i>
-    </ng-template>
-    <h3 class="text-lg font-semibold">Customers</h3>
-    <p class="text-gray-600">Manage customer data</p>
-    <ng-template pTemplate="footer">
-      <p-button label="Go to Customers" routerLink="/customers" />
-    </ng-template>
-  </p-card>
+<!-- Dashboard Header -->
+<div class="mb-8">
+  <h1 class="text-3xl font-bold mb-2" [style.color]="isDarkMode ? 'var(--text-primary)' : '#1f2937'">Dashboard</h1>
+  <p [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Welcome to your Point of Sale system</p>
 </div>
 
-<p-button label="Logout" severity="danger" (onClick)="logout()" />
+<!-- Quick Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all duration-200"
+       [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+       [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+       [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-medium" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Today's Sales</p>
+        <p class="text-2xl font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">$0.00</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+           [style.backgroundColor]="isDarkMode ? '#065f46' : '#dcfce7'">
+        <i class="pi pi-shopping-cart text-2xl" [style.color]="isDarkMode ? '#34d399' : '#16a34a'"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all duration-200"
+       [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+       [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+       [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-medium" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Total Products</p>
+        <p class="text-2xl font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">{{ totalProducts }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+           [style.backgroundColor]="isDarkMode ? '#1e40af' : '#dbeafe'">
+        <i class="pi pi-box text-2xl" [style.color]="isDarkMode ? '#60a5fa' : '#2563eb'"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all duration-200"
+       [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+       [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+       [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-medium" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Active Customers</p>
+        <p class="text-2xl font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">{{ totalCustomers }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+           [style.backgroundColor]="isDarkMode ? '#7c3aed' : '#faf5ff'">
+        <i class="pi pi-users text-2xl" [style.color]="isDarkMode ? '#a78bfa' : '#9333ea'"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all duration-200"
+       [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+       [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+       [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-medium" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Low Stock Items</p>
+        <p class="text-2xl font-bold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">{{ lowStockCount }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+           [style.backgroundColor]="isDarkMode ? '#9a3412' : '#fff7ed'">
+        <i class="pi pi-clipboard text-2xl" [style.color]="isDarkMode ? '#fb923c' : '#ea580c'"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Action Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all cursor-pointer group"
+        [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+        [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+        routerLink="/sales">
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 transition-colors"
+           [style.backgroundColor]="isDarkMode ? '#065f46' : '#dcfce7'"
+           [style]="isDarkMode ? '' : 'group-hover:background-color: #bbf7d0'">
+        <i class="pi pi-shopping-cart text-lg" [style.color]="isDarkMode ? '#34d399' : '#16a34a'"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Sales</h3>
+        <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Process transactions</p>
+      </div>
+    </div>
+    <p class="mb-4" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Create new sales, manage transactions, and process payments.</p>
+    <div class="flex items-center font-medium" [style.color]="isDarkMode ? '#34d399' : '#16a34a'">
+      <span>Go to Sales</span>
+      <i class="pi pi-chevron-right ml-2 text-sm"></i>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all cursor-pointer group"
+        [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+        [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+        routerLink="/products">
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 transition-colors"
+           [style.backgroundColor]="isDarkMode ? '#1e40af' : '#dbeafe'"
+           [style]="isDarkMode ? '' : 'group-hover:background-color: #bfdbfe'">
+        <i class="pi pi-box text-lg" [style.color]="isDarkMode ? '#60a5fa' : '#2563eb'"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Products</h3>
+        <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Manage inventory</p>
+      </div>
+    </div>
+    <p class="mb-4" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Add, edit, and organize your product catalog and pricing.</p>
+    <div class="flex items-center font-medium" [style.color]="isDarkMode ? '#60a5fa' : '#2563eb'">
+      <span>Go to Products</span>
+      <i class="pi pi-chevron-right ml-2 text-sm"></i>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all cursor-pointer group"
+        [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+        [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+        routerLink="/inventory">
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 transition-colors"
+           [style.backgroundColor]="isDarkMode ? '#9a3412' : '#fff7ed'"
+           [style]="isDarkMode ? '' : 'group-hover:background-color: #fed7aa'">
+        <i class="pi pi-clipboard text-lg" [style.color]="isDarkMode ? '#fb923c' : '#ea580c'"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Inventory</h3>
+        <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Track stock levels</p>
+      </div>
+    </div>
+    <p class="mb-4" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Monitor stock levels, manage suppliers, and track inventory.</p>
+    <div class="flex items-center font-medium" [style.color]="isDarkMode ? '#fb923c' : '#ea580c'">
+      <span>Go to Inventory</span>
+      <i class="pi pi-chevron-right ml-2 text-sm"></i>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all cursor-pointer group"
+        [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+        [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+        routerLink="/customers">
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 transition-colors"
+           [style.backgroundColor]="isDarkMode ? '#7c3aed' : '#faf5ff'"
+           [style]="isDarkMode ? '' : 'group-hover:background-color: #e9d5ff'">
+        <i class="pi pi-users text-lg" [style.color]="isDarkMode ? '#a78bfa' : '#9333ea'"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Customers</h3>
+        <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Manage clients</p>
+      </div>
+    </div>
+    <p class="mb-4" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Add and manage customer information and purchase history.</p>
+    <div class="flex items-center font-medium" [style.color]="isDarkMode ? '#a78bfa' : '#9333ea'">
+      <span>Go to Customers</span>
+      <i class="pi pi-chevron-right ml-2 text-sm"></i>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all cursor-pointer group"
+        [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+        [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+        routerLink="/reports">
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 transition-colors"
+           [style.backgroundColor]="isDarkMode ? '#312e81' : '#eef2ff'"
+           [style]="isDarkMode ? '' : 'group-hover:background-color: #e0e7ff'">
+        <i class="pi pi-chart-bar text-lg" [style.color]="isDarkMode ? '#818cf8' : '#4f46e5'"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Reports</h3>
+        <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">View analytics</p>
+      </div>
+    </div>
+    <p class="mb-4" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Generate sales reports and business insights.</p>
+    <div class="flex items-center font-medium" [style.color]="isDarkMode ? '#818cf8' : '#4f46e5'">
+      <span>Go to Reports</span>
+      <i class="pi pi-chevron-right ml-2 text-sm"></i>
+    </div>
+  </div>
+
+  <div class="rounded-xl shadow-sm border p-6 hover:shadow-md transition-all cursor-pointer group"
+        [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+        [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'"
+        routerLink="/suppliers">
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 transition-colors"
+           [style.backgroundColor]="isDarkMode ? '#0f766e' : '#f0fdfa'"
+           [style]="isDarkMode ? '' : 'group-hover:background-color: #ccfbf1'">
+        <i class="pi pi-building text-lg" [style.color]="isDarkMode ? '#5eead4' : '#0d9488'"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Suppliers</h3>
+        <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Manage vendors</p>
+      </div>
+    </div>
+    <p class="mb-4" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Manage supplier information and procurement.</p>
+    <div class="flex items-center font-medium" [style.color]="isDarkMode ? '#5eead4' : '#0d9488'">
+      <span>Go to Suppliers</span>
+      <i class="pi pi-chevron-right ml-2 text-sm"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Activity Section -->
+<div class="rounded-xl shadow-sm border p-6"
+     [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'"
+     [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#e5e7eb'">
+  <h3 class="text-lg font-semibold mb-4" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Recent Activity</h3>
+  <div class="space-y-3">
+    <div class="flex items-center p-3 rounded-lg"
+         [style.backgroundColor]="isDarkMode ? 'var(--bg-tertiary)' : '#f9fafb'">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3"
+           [style.backgroundColor]="isDarkMode ? '#065f46' : '#dcfce7'">
+        <i class="pi pi-shopping-cart text-sm" [style.color]="isDarkMode ? '#34d399' : '#16a34a'"></i>
+      </div>
+      <div class="flex-1">
+        <p class="text-sm font-medium" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Welcome to POS System</p>
+        <p class="text-xs" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Your system is ready to use</p>
+      </div>
+      <span class="text-xs" [style.color]="isDarkMode ? 'var(--text-muted)' : '#9ca3af'">Just now</span>
+    </div>
+  </div>
+</div>

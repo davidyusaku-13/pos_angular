@@ -157,14 +157,17 @@ ALTER TABLE public.inventory_transactions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view own data" ON public.users
   FOR SELECT USING (auth.uid() = id);
 
--- Admins can do everything
-CREATE POLICY "Admins can do everything on users" ON public.users
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.users
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+-- Users can update their own data
+CREATE POLICY "Users can update own data" ON public.users
+  FOR UPDATE USING (auth.uid() = id);
+
+-- Allow authenticated users to insert their own profile (for registration)
+CREATE POLICY "Users can insert own data" ON public.users
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Service role can do everything (for admin operations)
+CREATE POLICY "Service role can manage all users" ON public.users
+  FOR ALL USING (auth.role() = 'service_role');
 
 -- Public read access for categories and products
 CREATE POLICY "Public read access for categories" ON public.categories

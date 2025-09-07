@@ -1,50 +1,108 @@
-<div class="flex justify-center items-center min-h-screen bg-gray-100">
-  <p-card class="w-full max-w-md">
-    <ng-template pTemplate="header">
-      <h2 class="text-2xl font-bold text-center">POS Login</h2>
-    </ng-template>
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
-      <div>
-        <label for="email" class="block text-sm font-medium mb-1">Email</label>
-        <input
-          pInputText
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Enter email"
-          class="w-full"
-          [class.ng-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-        />
+<div class="min-h-screen flex items-center justify-center p-4"
+     [style.background]="isDarkMode ? 'linear-gradient(to bottom right, #1e293b, #0f172a)' : 'linear-gradient(to bottom right, #eff6ff, #ffffff, #e0e7ff)'">
+  <div class="w-full max-w-md">
+    <!-- Logo and Header -->
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+           [style.background]="isDarkMode ? 'linear-gradient(to right, #3b82f6, #1d4ed8)' : 'linear-gradient(to right, #2563eb, #3730a3)'">
+        <i class="pi pi-home text-white text-3xl"></i>
       </div>
+      <h1 class="text-3xl font-bold mb-2" [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'">Welcome Back</h1>
+      <p [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">Sign in to your POS system</p>
+    </div>
 
-      <div>
-        <label for="password" class="block text-sm font-medium mb-1">Password</label>
-        <p-password
-          id="password"
-          formControlName="password"
-          placeholder="Enter password"
-          styleClass="w-full"
-          [toggleMask]="true"
-          [feedback]="false"
-          [class.ng-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+    <!-- Login Card -->
+    <div class="rounded-2xl shadow-xl border-0 p-8"
+         [style.backgroundColor]="isDarkMode ? 'var(--card-bg)' : '#ffffff'">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Email Field -->
+        <div>
+          <label for="email" class="block text-sm font-semibold mb-2"
+                 [style.color]="isDarkMode ? 'var(--text-primary)' : '#374151'">
+            Email Address
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="pi pi-user text-lg" [style.color]="isDarkMode ? 'var(--text-muted)' : '#9ca3af'"></i>
+            </div>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              class="w-full pl-10 pr-3 py-3 border rounded-lg transition-colors"
+              [style.backgroundColor]="isDarkMode ? 'var(--bg-secondary)' : '#ffffff'"
+              [style.borderColor]="isDarkMode ? 'var(--border-color)' : '#d1d5db'"
+              [style.color]="isDarkMode ? 'var(--text-primary)' : '#111827'"
+              [style]="isDarkMode ? 'focus:ring-2 focus:ring-blue-400 focus:border-blue-400' : 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500'"
+              [class.ng-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            />
+          </div>
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="mt-1 text-sm text-red-600">
+            Please enter a valid email address
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <label for="password" class="block text-sm font-semibold mb-2"
+                 [style.color]="isDarkMode ? 'var(--text-primary)' : '#374151'">
+            Password
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="pi pi-lock text-lg" [style.color]="isDarkMode ? 'var(--text-muted)' : '#9ca3af'"></i>
+            </div>
+            <p-password
+              id="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              styleClass="w-full"
+              [inputStyleClass]="isDarkMode ? 'w-full pl-10 pr-3 py-3 border rounded-lg transition-colors bg-slate-700 text-white border-slate-600 focus:ring-2 focus:ring-blue-400 focus:border-blue-400' : 'w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'"
+              [toggleMask]="true"
+              [feedback]="false"
+              [class.ng-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            />
+          </div>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="mt-1 text-sm text-red-600">
+            Password is required
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="border rounded-lg p-4"
+             [style.backgroundColor]="isDarkMode ? '#7f1d1d' : '#fef2f2'"
+             [style.borderColor]="isDarkMode ? '#dc2626' : '#fecaca'">
+          <div class="flex items-center">
+            <i class="pi pi-exclamation-triangle text-red-500 mr-2 text-lg"></i>
+            <p class="text-sm" [style.color]="isDarkMode ? '#fca5a5' : '#b91c1c'">{{ errorMessage }}</p>
+          </div>
+        </div>
+
+        <!-- Login Button -->
+        <p-button
+          type="submit"
+          label="Sign In"
+          [loading]="loading"
+          [disabled]="loginForm.invalid"
+          [styleClass]="isDarkMode ? 'w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 border-0 rounded-lg text-white font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl' : 'w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 border-0 rounded-lg text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl'"
         />
-      </div>
 
-      <p-message
-        *ngIf="errorMessage"
-        severity="error"
-        [text]="errorMessage"
-        class="w-full"
-      />
+        <!-- Additional Info -->
+        <div class="text-center">
+          <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-secondary)' : '#6b7280'">
+            First time? The first user to sign up becomes the admin.
+          </p>
+        </div>
+      </form>
+    </div>
 
-      <p-button
-        type="submit"
-        label="Login"
-        [loading]="loading"
-        [disabled]="loginForm.invalid"
-        styleClass="w-full"
-      />
-    </form>
-  </p-card>
+    <!-- Footer -->
+    <div class="text-center mt-8">
+      <p class="text-sm" [style.color]="isDarkMode ? 'var(--text-muted)' : '#9ca3af'">
+        Secure POS System • Built with Angular & Supabase
+      </p>
+    </div>
+  </div>
 </div>
