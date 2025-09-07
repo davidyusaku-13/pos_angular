@@ -1,0 +1,51 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center">
+      <h2 class="text-xl font-bold">Product Catalog</h2>
+      <div class="flex gap-2">
+        <input
+          pInputText
+          [(ngModel)]="searchTerm"
+          placeholder="Search products..."
+          (keyup.enter)="onSearch()"
+        />
+        <p-button label="Search" (onClick)="onSearch()" />
+        <p-button label="Add Product" severity="success" />
+      </div>
+    </div>
+  </ng-template>
+
+  <p-table
+    [value]="products"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[10, 25, 50]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+        <th pSortableColumn="sku">SKU <p-sortIcon field="sku" /></th>
+        <th pSortableColumn="price">Price <p-sortIcon field="price" /></th>
+        <th pSortableColumn="stockQuantity">Stock <p-sortIcon field="stockQuantity" /></th>
+        <th pSortableColumn="unit">Unit <p-sortIcon field="unit" /></th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.sku }}</td>
+        <td>Rp {{ product.price | number }}</td>
+        <td>{{ product.stockQuantity }}</td>
+        <td>{{ product.unit }}</td>
+        <td>
+          <p-button label="Edit" size="small" />
+          <p-button label="Delete" size="small" severity="danger" class="ml-2" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

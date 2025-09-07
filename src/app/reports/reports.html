@@ -1,0 +1,178 @@
+<div class="space-y-6">
+  <!-- Report Controls -->
+  <p-card>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <h3 class="text-lg font-semibold">Advanced Analytics & Reports</h3>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <p-button label="Apply Filters" icon="pi pi-filter" (onClick)="applyFilters()" />
+        <p-button label="Export Report" icon="pi pi-download" severity="success" (onClick)="exportReport()" />
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Period</label>
+        <p-select
+          [(ngModel)]="selectedPeriod"
+          [options]="periodOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select period"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Category</label>
+        <p-select
+          [(ngModel)]="selectedCategory"
+          [options]="categoryOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select category"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Start Date</label>
+        <input
+          type="date"
+          [(ngModel)]="dateRange[0]"
+          class="w-full p-2 border rounded"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">End Date</label>
+        <input
+          type="date"
+          [(ngModel)]="dateRange[1]"
+          class="w-full p-2 border rounded"
+        />
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Sales Chart -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h4 class="text-md font-semibold">Monthly Sales Trend</h4>
+    </ng-template>
+    <div class="h-64">
+      <p-chart type="line" [data]="salesData" [options]="salesChartOptions"></p-chart>
+    </div>
+  </p-card>
+
+  <!-- Inventory Chart -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h4 class="text-md font-semibold">Current Inventory Levels</h4>
+    </ng-template>
+    <div class="h-64">
+      <p-chart type="bar" [data]="inventoryData" [options]="inventoryChartOptions"></p-chart>
+    </div>
+  </p-card>
+
+  <!-- Top Products Table -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h4 class="text-md font-semibold">Top Selling Products</h4>
+    </ng-template>
+    <p-table [value]="topProducts" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Product Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="sales">Units Sold <p-sortIcon field="sales" /></th>
+          <th pSortableColumn="revenue">Revenue (IDR) <p-sortIcon field="revenue" /></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.sales }}</td>
+          <td>Rp {{ product.revenue | number }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Sales by Category Chart -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h4 class="text-md font-semibold">Sales by Category</h4>
+    </ng-template>
+    <div class="h-64">
+      <p-chart type="doughnut" [data]="getSalesByCategoryChartData()" [options]="salesChartOptions"></p-chart>
+    </div>
+  </p-card>
+
+  <!-- Profit Trend Chart -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h4 class="text-md font-semibold">Profit Trend</h4>
+    </ng-template>
+    <div class="h-64">
+      <p-chart type="line" [data]="getProfitChartData()" [options]="salesChartOptions"></p-chart>
+    </div>
+  </p-card>
+
+  <!-- Sales by Category Table -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h4 class="text-md font-semibold">Sales by Category Details</h4>
+    </ng-template>
+    <p-table [value]="salesByCategory" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="category">Category <p-sortIcon field="category" /></th>
+          <th pSortableColumn="sales">Sales (IDR) <p-sortIcon field="sales" /></th>
+          <th pSortableColumn="percentage">Percentage <p-sortIcon field="percentage" /></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-category>
+        <tr>
+          <td>{{ category.category }}</td>
+          <td>Rp {{ category.sales | number }}</td>
+          <td>{{ category.percentage }}%</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Advanced Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <p-card>
+      <div class="text-center">
+        <h4 class="text-2xl font-bold text-green-600">Rp {{ getTotalRevenue() | number }}</h4>
+        <p class="text-sm text-gray-600">Total Revenue</p>
+        <p class="text-xs text-green-500">+12% from last period</p>
+      </div>
+    </p-card>
+
+    <p-card>
+      <div class="text-center">
+        <h4 class="text-2xl font-bold text-blue-600">{{ getTotalTransactions() }}</h4>
+        <p class="text-sm text-gray-600">Total Transactions</p>
+        <p class="text-xs text-blue-500">+8% from last period</p>
+      </div>
+    </p-card>
+
+    <p-card>
+      <div class="text-center">
+        <h4 class="text-2xl font-bold text-purple-600">Rp {{ getAverageOrderValue() | number }}</h4>
+        <p class="text-sm text-gray-600">Avg Order Value</p>
+        <p class="text-xs text-purple-500">+5% from last period</p>
+      </div>
+    </p-card>
+
+    <p-card>
+      <div class="text-center">
+        <h4 class="text-2xl font-bold text-orange-600">85%</h4>
+        <p class="text-sm text-gray-600">Profit Margin</p>
+        <p class="text-xs text-orange-500">+2% from last period</p>
+      </div>
+    </p-card>
+  </div>
+</div>

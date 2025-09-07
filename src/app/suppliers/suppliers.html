@@ -1,0 +1,258 @@
+<div class="space-y-6">
+  <!-- Suppliers Section -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-semibold">Suppliers</h3>
+        <p-button label="Add Supplier" icon="pi pi-plus" (onClick)="openNewSupplierDialog()" />
+      </div>
+    </ng-template>
+
+    <p-table [value]="suppliers" [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="contactPerson">Contact Person <p-sortIcon field="contactPerson" /></th>
+          <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+          <th pSortableColumn="phone">Phone <p-sortIcon field="phone" /></th>
+          <th pSortableColumn="paymentTerms">Payment Terms <p-sortIcon field="paymentTerms" /></th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-supplier>
+        <tr>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.contactPerson }}</td>
+          <td>{{ supplier.email }}</td>
+          <td>{{ supplier.phone }}</td>
+          <td>{{ supplier.paymentTerms }}</td>
+          <td>
+            <p-button
+              label="Edit"
+              icon="pi pi-pencil"
+              size="small"
+              (onClick)="openEditSupplierDialog(supplier)"
+            />
+            <p-button
+              label="Delete"
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              class="ml-2"
+              (onClick)="deleteSupplier(supplier)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Purchase Orders Section -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-semibold">Purchase Orders</h3>
+        <p-button label="Create Purchase Order" icon="pi pi-plus" (onClick)="openNewPurchaseOrderDialog()" />
+      </div>
+    </ng-template>
+
+    <p-table [value]="purchaseOrders" [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="orderNumber">Order Number <p-sortIcon field="orderNumber" /></th>
+          <th>Supplier</th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+          <th pSortableColumn="totalAmount">Total Amount <p-sortIcon field="totalAmount" /></th>
+          <th pSortableColumn="expectedDeliveryDate">Expected Delivery <p-sortIcon field="expectedDeliveryDate" /></th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-purchaseOrder>
+        <tr>
+          <td>{{ purchaseOrder.orderNumber }}</td>
+          <td>{{ getSupplierName(purchaseOrder.supplierId) }}</td>
+          <td>
+            <p-tag
+              [value]="purchaseOrder.status.toUpperCase()"
+              [severity]="getStatusSeverity(purchaseOrder.status)"
+            />
+          </td>
+          <td>Rp {{ purchaseOrder.totalAmount | number }}</td>
+          <td>{{ purchaseOrder.expectedDeliveryDate | date:'shortDate' }}</td>
+          <td>
+            <p-button label="View" icon="pi pi-eye" size="small" />
+            <p-button label="Edit" icon="pi pi-pencil" size="small" class="ml-2" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<!-- Supplier Form Dialog -->
+<p-dialog
+  [(visible)]="showSupplierDialog"
+  [header]="isEditingSupplier ? 'Edit Supplier' : 'Add New Supplier'"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+>
+  <form [formGroup]="supplierForm" (ngSubmit)="saveSupplier()">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="name" class="block text-sm font-medium mb-1">Name *</label>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          placeholder="Enter supplier name"
+          class="w-full"
+          [class.ng-invalid]="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched"
+        />
+      </div>
+
+      <div>
+        <label for="contactPerson" class="block text-sm font-medium mb-1">Contact Person</label>
+        <input
+          pInputText
+          id="contactPerson"
+          formControlName="contactPerson"
+          placeholder="Enter contact person"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="Enter email address"
+          class="w-full"
+          [class.ng-invalid]="supplierForm.get('email')?.invalid && supplierForm.get('email')?.touched"
+        />
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium mb-1">Phone</label>
+        <input
+          pInputText
+          id="phone"
+          formControlName="phone"
+          placeholder="Enter phone number"
+          class="w-full"
+        />
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="address" class="block text-sm font-medium mb-1">Address</label>
+        <input
+          pInputText
+          formControlName="address"
+          placeholder="Enter address"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label for="paymentTerms" class="block text-sm font-medium mb-1">Payment Terms</label>
+        <input
+          pInputText
+          formControlName="paymentTerms"
+          placeholder="e.g., Net 30 days"
+          class="w-full"
+        />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="showSupplierDialog = false"
+    />
+    <p-button
+      label="Save"
+      icon="pi pi-check"
+      (onClick)="saveSupplier()"
+      [disabled]="supplierForm.invalid"
+    />
+  </ng-template>
+</p-dialog>
+
+<!-- Purchase Order Form Dialog -->
+<p-dialog
+  [(visible)]="showPurchaseOrderDialog"
+  [header]="isEditingPurchaseOrder ? 'Edit Purchase Order' : 'Create Purchase Order'"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+>
+  <form [formGroup]="purchaseOrderForm" (ngSubmit)="savePurchaseOrder()">
+    <div class="space-y-4">
+      <div>
+        <label for="supplierId" class="block text-sm font-medium mb-1">Supplier *</label>
+        <select
+          pInputText
+          formControlName="supplierId"
+          class="w-full p-2 border rounded"
+          [class.ng-invalid]="purchaseOrderForm.get('supplierId')?.invalid && purchaseOrderForm.get('supplierId')?.touched"
+        >
+          <option value="">Select Supplier</option>
+          <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+            {{ supplier.name }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="totalAmount" class="block text-sm font-medium mb-1">Total Amount</label>
+        <p-inputNumber
+          formControlName="totalAmount"
+          [min]="0"
+          placeholder="Enter total amount"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label for="expectedDeliveryDate" class="block text-sm font-medium mb-1">Expected Delivery Date</label>
+        <input
+          pInputText
+          formControlName="expectedDeliveryDate"
+          type="date"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label for="notes" class="block text-sm font-medium mb-1">Notes</label>
+        <input
+          pInputText
+          formControlName="notes"
+          placeholder="Enter notes"
+          class="w-full"
+        />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="showPurchaseOrderDialog = false"
+    />
+    <p-button
+      label="Save"
+      icon="pi pi-check"
+      (onClick)="savePurchaseOrder()"
+      [disabled]="purchaseOrderForm.invalid"
+    />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog />

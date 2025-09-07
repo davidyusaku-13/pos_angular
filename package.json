@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "seed": "bunx tsx scripts/seed.ts",
+    "install:all": "bun install",
+    "dev": "bun run start",
+    "prod:build": "bun run build"
   },
   "prettier": {
     "printWidth": 100,
@@ -28,7 +32,15 @@
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
+    "@primeuix/themes": "^1.2.3",
+    "@supabase/supabase-js": "^2.57.2",
+    "@tailwindcss/postcss": "^4.1.13",
+    "chart.js": "^4.5.0",
+    "postcss": "^8.5.6",
+    "primeng": "^20.1.1",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^4.1.13",
+    "tailwindcss-primeui": "^0.6.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
@@ -44,5 +56,9 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.9.2"
-  }
+  },
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "@tailwindcss/oxide"
+  ]
 }

@@ -1,0 +1,126 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- Product Search and List -->
+  <div class="lg:col-span-2">
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-semibold">Product Search</h3>
+          <div class="flex gap-2">
+            <input
+              pInputText
+              [(ngModel)]="searchTerm"
+              placeholder="Search products..."
+              (keyup.enter)="onSearch()"
+            />
+            <p-button label="Search" (onClick)="onSearch()" />
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          *ngFor="let product of products"
+          class="border rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+          (click)="addToCart(product)"
+        >
+          <h4 class="font-semibold">{{ product.name }}</h4>
+          <p class="text-sm text-gray-600">{{ product.description }}</p>
+          <p class="text-lg font-bold text-green-600">Rp {{ product.price | number }}</p>
+          <p class="text-sm">Stock: {{ product.stockQuantity }}</p>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Cart and Checkout -->
+  <div>
+    <p-card>
+      <ng-template pTemplate="header">
+        <h3 class="text-lg font-semibold">Shopping Cart</h3>
+      </ng-template>
+
+      <div class="space-y-4">
+        <div *ngIf="cart.length === 0" class="text-center text-gray-500">
+          Cart is empty
+        </div>
+
+        <div *ngFor="let item of cart; let i = index" class="flex justify-between items-center border-b pb-2">
+          <div class="flex-1">
+            <h4 class="font-semibold">{{ item.productName }}</h4>
+            <p class="text-sm">Rp {{ item.unitPrice | number }} x {{ item.quantity }}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-inputNumber
+              [(ngModel)]="item.quantity"
+              [min]="1"
+              [max]="100"
+              (onInput)="updateQuantity(item, $event.value ? +$event.value : 0)"
+              size="small"
+            />
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              size="small"
+              (onClick)="removeFromCart(i)"
+            />
+          </div>
+        </div>
+
+        <div *ngIf="cart.length > 0" class="border-t pt-4">
+          <div class="flex justify-between text-lg font-bold">
+            <span>Total:</span>
+            <span>Rp {{ getTotal() | number }}</span>
+          </div>
+          <p-button
+            label="Checkout"
+            styleClass="w-full mt-4"
+            (onClick)="showCheckoutDialog = true"
+          />
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<!-- Checkout Dialog -->
+<p-dialog
+  [(visible)]="showCheckoutDialog"
+  header="Checkout"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+>
+  <div class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-2">Payment Method</label>
+      <p-select
+        [(ngModel)]="selectedPaymentMethod"
+        [options]="paymentMethods"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select payment method"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="border-t pt-4">
+      <div class="flex justify-between text-lg font-bold">
+        <span>Total Amount:</span>
+        <span>Rp {{ getTotal() | number }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="showCheckoutDialog = false"
+    />
+    <p-button
+      label="Complete Sale"
+      icon="pi pi-check"
+      (onClick)="checkout()"
+    />
+  </ng-template>
+</p-dialog>

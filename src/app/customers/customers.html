@@ -1,0 +1,131 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center">
+      <h3 class="text-lg font-semibold">Customer Management</h3>
+      <p-button label="Add Customer" icon="pi pi-plus" (onClick)="openNewCustomerDialog()" />
+    </div>
+  </ng-template>
+
+  <p-table [value]="customers" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+        <th pSortableColumn="phone">Phone <p-sortIcon field="phone" /></th>
+        <th pSortableColumn="loyaltyPoints">Loyalty Points <p-sortIcon field="loyaltyPoints" /></th>
+        <th pSortableColumn="createdAt">Created <p-sortIcon field="createdAt" /></th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-customer>
+      <tr>
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.loyaltyPoints }}</td>
+        <td>{{ customer.createdAt | date:'short' }}</td>
+        <td>
+          <p-button
+            label="Edit"
+            icon="pi pi-pencil"
+            size="small"
+            (onClick)="openEditCustomerDialog(customer)"
+          />
+          <p-button
+            label="Delete"
+            icon="pi pi-trash"
+            size="small"
+            severity="danger"
+            class="ml-2"
+            (onClick)="deleteCustomer(customer)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
+
+<!-- Customer Form Dialog -->
+<p-dialog
+  [(visible)]="showDialog"
+  [header]="isEditing ? 'Edit Customer' : 'Add New Customer'"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+>
+  <form [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
+    <div class="space-y-4">
+      <div>
+        <label for="name" class="block text-sm font-medium mb-1">Name *</label>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          placeholder="Enter customer name"
+          class="w-full"
+          [class.ng-invalid]="customerForm.get('name')?.invalid && customerForm.get('name')?.touched"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="Enter email address"
+          class="w-full"
+          [class.ng-invalid]="customerForm.get('email')?.invalid && customerForm.get('email')?.touched"
+        />
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium mb-1">Phone</label>
+        <input
+          pInputText
+          id="phone"
+          formControlName="phone"
+          placeholder="Enter phone number"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label for="address" class="block text-sm font-medium mb-1">Address</label>
+        <input
+          pInputText
+          formControlName="address"
+          placeholder="Enter address"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label for="loyaltyPoints" class="block text-sm font-medium mb-1">Loyalty Points</label>
+        <p-inputNumber
+          formControlName="loyaltyPoints"
+          [min]="0"
+          placeholder="Enter loyalty points"
+          class="w-full"
+        />
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      severity="secondary"
+      (onClick)="showDialog = false"
+    />
+    <p-button
+      label="Save"
+      icon="pi pi-check"
+      (onClick)="saveCustomer()"
+      [disabled]="customerForm.invalid"
+    />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog />

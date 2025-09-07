@@ -1,0 +1,97 @@
+<div class="space-y-6">
+  <!-- Stock Alerts -->
+  <div *ngIf="lowStockAlerts.length > 0">
+    <p-card>
+      <ng-template pTemplate="header">
+        <h3 class="text-lg font-semibold text-red-600">⚠️ Low Stock Alerts</h3>
+      </ng-template>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div *ngFor="let product of lowStockAlerts" class="border-l-4 border-red-500 pl-4">
+          <h4 class="font-semibold">{{ product.name }}</h4>
+          <p class="text-sm text-gray-600">SKU: {{ product.sku }}</p>
+          <p class="text-red-600">Current Stock: {{ product.stockQuantity }} {{ product.unit }}</p>
+          <p class="text-sm">Min Level: {{ product.minStockLevel }} {{ product.unit }}</p>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Current Stock Levels -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h3 class="text-lg font-semibold">Current Stock Levels</h3>
+    </ng-template>
+
+    <p-table [value]="products" [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Product Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="sku">SKU <p-sortIcon field="sku" /></th>
+          <th pSortableColumn="stockQuantity">Current Stock <p-sortIcon field="stockQuantity" /></th>
+          <th>Min Level</th>
+          <th>Max Level</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.sku }}</td>
+          <td>{{ product.stockQuantity }} {{ product.unit }}</td>
+          <td>{{ product.minStockLevel }} {{ product.unit }}</td>
+          <td>{{ product.maxStockLevel || 'N/A' }} {{ product.unit }}</td>
+          <td>
+            <p-tag
+              [value]="getStockStatus(product).toUpperCase()"
+              [severity]="getStockStatusSeverity(getStockStatus(product))"
+            />
+          </td>
+          <td>
+            <p-button label="Adjust Stock" size="small" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Transaction History -->
+  <p-card>
+    <ng-template pTemplate="header">
+      <h3 class="text-lg font-semibold">Recent Transactions</h3>
+    </ng-template>
+
+    <p-table [value]="transactions" [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="transactionDate">Date <p-sortIcon field="transactionDate" /></th>
+          <th pSortableColumn="transactionType">Type <p-sortIcon field="transactionType" /></th>
+          <th>Product</th>
+          <th pSortableColumn="quantity">Quantity <p-sortIcon field="quantity" /></th>
+          <th>Previous Stock</th>
+          <th>New Stock</th>
+          <th>Reference</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-transaction>
+        <tr>
+          <td>{{ transaction.transactionDate | date:'short' }}</td>
+          <td>
+            <p-tag
+              [value]="transaction.transactionType.toUpperCase()"
+              [severity]="transaction.quantity > 0 ? 'success' : 'danger'"
+            />
+          </td>
+          <td>Product #{{ transaction.productId }}</td>
+          <td [class]="transaction.quantity > 0 ? 'text-green-600' : 'text-red-600'">
+            {{ transaction.quantity > 0 ? '+' : '' }}{{ transaction.quantity }}
+          </td>
+          <td>{{ transaction.previousStock }}</td>
+          <td>{{ transaction.newStock }}</td>
+          <td>{{ transaction.referenceType }} #{{ transaction.referenceId }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

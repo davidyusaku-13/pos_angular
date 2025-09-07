@@ -1,0 +1,49 @@
+<h1>POS Dashboard</h1>
+
+<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <p-card>
+    <ng-template pTemplate="header">
+      <i class="pi pi-shopping-cart text-2xl"></i>
+    </ng-template>
+    <h3 class="text-lg font-semibold">Sales</h3>
+    <p class="text-gray-600">Manage sales transactions</p>
+    <ng-template pTemplate="footer">
+      <p-button label="Go to Sales" routerLink="/sales" />
+    </ng-template>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <i class="pi pi-box text-2xl"></i>
+    </ng-template>
+    <h3 class="text-lg font-semibold">Products</h3>
+    <p class="text-gray-600">Manage product catalog</p>
+    <ng-template pTemplate="footer">
+      <p-button label="Go to Products" routerLink="/products" />
+    </ng-template>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <i class="pi pi-chart-line text-2xl"></i>
+    </ng-template>
+    <h3 class="text-lg font-semibold">Reports</h3>
+    <p class="text-gray-600">View sales reports</p>
+    <ng-template pTemplate="footer">
+      <p-button label="Go to Reports" routerLink="/reports" />
+    </ng-template>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <i class="pi pi-users text-2xl"></i>
+    </ng-template>
+    <h3 class="text-lg font-semibold">Customers</h3>
+    <p class="text-gray-600">Manage customer data</p>
+    <ng-template pTemplate="footer">
+      <p-button label="Go to Customers" routerLink="/customers" />
+    </ng-template>
+  </p-card>
+</div>
+
+<p-button label="Logout" severity="danger" (onClick)="logout()" />
